@@ -1,12 +1,9 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-
 # Read the CSV file
 df = pd.read_csv('data/all_surveys_specs5.csv')
-
 # Create figure with four subplots
 fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(12, 25))
-
 def make_subplot(ax, data, y_column, title):
     # Filter data
     df_filtered = data[data[y_column] > 1]
@@ -45,7 +42,9 @@ def make_subplot(ax, data, y_column, title):
                    textcoords='offset points',
                    fontsize=fontsize,
                    color=color,
-                   ha='right' if x_offset < 0 else 'left')
+                   ha='right' if x_offset < 0 else 'left',
+                   rotation=30,  # Added 30-degree rotation
+                   rotation_mode='anchor')  # This ensures rotation around the connection point
     
     # Set y-axis to log scale
     ax.set_yscale('log')
@@ -60,21 +59,17 @@ def make_subplot(ax, data, y_column, title):
     
     # Set x-axis limits with some padding
     ax.set_xlim(1998, 2043)
-
 # Create each subplot
 make_subplot(ax1, df, 'galaxy_z_gt_2.1', 'Galaxy Redshifts (z > 2.1) by Survey Start Year')
 make_subplot(ax2, df, 'galaxy_z_lt_2.1', 'Galaxy Redshifts (z < 2.1) by Survey Start Year')
 make_subplot(ax3, df, 'star_rvs', 'Star RVs by Survey Start Year')
 make_subplot(ax4, df, 'area', 'Survey Area [deg²] by Start Year')
-
 # Set y-labels
 ax1.set_ylabel('Number of Galaxies (log scale)', fontsize=20)
 ax2.set_ylabel('Number of Galaxies (log scale)', fontsize=20)
 ax3.set_ylabel('Number of Star RVs (log scale)', fontsize=20)
 ax4.set_ylabel('Area [deg²] (log scale)', fontsize=20)
-
 # Adjust layout
 plt.subplots_adjust(hspace=0.3)
-
 # Save the plot as PDF
 plt.savefig('survey_stats_comparison.pdf', bbox_inches='tight', dpi=300)
